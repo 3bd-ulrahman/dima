@@ -1,9 +1,7 @@
 <?php
 
-use App\Providers\AppServiceProvider;
-use App\Providers\ConfigurationServiceProvider;
-
 return [
-    AppServiceProvider::class,
-    ConfigurationServiceProvider::class,
+    App\Providers\AppServiceProvider::class,
+    App\Providers\ConfigurationServiceProvider::class,
+    App\Providers\TelescopeServiceProvider::class,
 ];
