@@ -10,6 +10,7 @@ const props = defineProps<{
         price: number;
         in_stock: boolean;
         category: { id: number; name: string };
+        media: Array<{ original_url: string }>;
     };
 }>();
 
@@ -17,30 +18,38 @@ function addToCart() {
     router.post(route('cart.add'), {
         product_id: props.product.id,
         quantity: 1,
+    }, {
+        preserveScroll: true
     });
 }
 </script>
 
 <template>
     <div class="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
-        <div class="flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-emerald-50 to-amber-50 p-6">
-            <span class="text-5xl">🛒</span>
+        <div class="h-48 flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-emerald-50 to-amber-50 p-6">
+            <img
+                v-if="props.product.media[0]?.original_url"
+                :src="props.product.media[0]?.original_url"
+                :alt="props.product.name"
+                class="h-full w-full object-cover"
+            />
+            <span v-else class="text-5xl">🛒</span>
         </div>
 
         <div class="flex flex-1 flex-col gap-2 p-4">
-            <Link :href="route('products.show', product.slug)" class="text-lg font-semibold text-gray-900 hover:text-emerald-600">
-                {{ product.name }}
+            <Link :href="route('products.show', props.product.slug)" class="text-lg font-semibold text-gray-900 hover:text-emerald-600">
+                {{ props.product.name }}
             </Link>
 
-            <span class="text-sm text-gray-500">{{ product.category.name }}</span>
+            <span class="text-sm text-gray-500">{{ props.product.category.name }}</span>
 
             <div class="mt-auto flex items-center justify-between">
                 <span class="text-xl font-bold text-emerald-700">
-                    {{ Number(product.price).toFixed(2) }} EGP
+                    {{ Number(props.product.price).toFixed(2) }} EGP
                 </span>
 
                 <button
-                    v-if="product.in_stock"
+                    v-if="props.product.in_stock"
                     @click="addToCart"
                     class="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700"
                 >

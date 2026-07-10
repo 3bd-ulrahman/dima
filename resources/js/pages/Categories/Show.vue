@@ -13,6 +13,7 @@ defineProps<{
             price: number;
             in_stock: boolean;
             category: { id: number; name: string };
+            media: Array<{ original_url: string }>;
         }>;
         current_page: number;
         last_page: number;

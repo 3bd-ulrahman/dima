@@ -12,6 +12,7 @@ const props = defineProps<{
         price: number;
         in_stock: boolean;
         category: { id: number; name: string; slug: string };
+        media: Array<{ original_url: string }>;
         created_at: string;
     };
     related: Array<{
@@ -21,6 +22,7 @@ const props = defineProps<{
         price: number;
         in_stock: boolean;
         category: { id: number; name: string };
+        media: Array<{ original_url: string }>;
     }>;
 }>();
 
@@ -43,8 +45,14 @@ function addToCart() {
         </Link>
 
         <div class="mt-6 grid grid-cols-1 gap-12 lg:grid-cols-2">
-            <div class="flex aspect-square items-center justify-center rounded-xl bg-gradient-to-br from-emerald-50 to-amber-50">
-                <span class="text-8xl">🛒</span>
+            <div class="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-emerald-50 to-amber-50">
+                <img
+                    v-if="props.product.media[0]?.original_url"
+                    :src="props.product.media[0]?.original_url"
+                    :alt="product.name"
+                    class="h-full w-full object-cover"
+                />
+                <span v-else class="text-8xl">🛒</span>
             </div>
 
             <div>

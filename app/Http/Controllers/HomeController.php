@@ -18,7 +18,7 @@ class HomeController extends Controller
             ->orderBy('name')
             ->get();
 
-        $products = Product::with('category')
+        $products = Product::with(['category', 'media'])
             ->where('in_stock', true)
             ->orderBy('created_at', 'desc')
             ->limit(8)
