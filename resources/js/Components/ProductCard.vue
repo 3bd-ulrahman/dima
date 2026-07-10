@@ -35,7 +35,9 @@ function addToCart() {
             <span class="text-sm text-gray-500">{{ product.category.name }}</span>
 
             <div class="mt-auto flex items-center justify-between">
-                <span class="text-xl font-bold text-emerald-700">${{ Number(product.price).toFixed(2) }}</span>
+                <span class="text-xl font-bold text-emerald-700">
+                    {{ Number(product.price).toFixed(2) }} EGP
+                </span>
 
                 <button
                     v-if="product.in_stock"

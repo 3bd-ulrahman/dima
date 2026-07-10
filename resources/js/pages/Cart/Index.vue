@@ -55,7 +55,9 @@ function removeItem(itemId: number) {
                                 {{ item.product.name }}
                             </Link>
                             <p class="text-sm text-gray-500">{{ item.product.category.name }}</p>
-                            <p class="font-semibold text-emerald-700">${{ Number(item.product.price).toFixed(2) }}</p>
+                            <p class="font-semibold text-emerald-700">
+                                {{ Number(item.product.price).toFixed(2) }} EGP
+                            </p>
                         </div>
 
                         <div class="flex items-center gap-3">
@@ -80,17 +82,17 @@ function removeItem(itemId: number) {
                 <div class="mb-4 flex justify-between">
                     <span class="text-gray-600">Subtotal</span>
                     <span class="font-semibold">
-                        ${{ cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toFixed(2) }}
+                        {{ cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toFixed(2) }} EGP
                     </span>
                 </div>
                 <div class="mb-4 flex justify-between">
                     <span class="text-gray-600">Delivery Fee</span>
-                    <span class="font-semibold">$5.00</span>
+                    <span class="font-semibold">5.00 EGP </span>
                 </div>
                 <div class="mb-6 flex justify-between border-t pt-4">
                     <span class="text-lg font-bold text-gray-900">Total</span>
                     <span class="text-lg font-bold text-emerald-700">
-                        ${{ (cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0) + 5).toFixed(2) }}
+                        {{ (cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0) + 5).toFixed(2) }} EGP
                     </span>
                 </div>
                 <Link

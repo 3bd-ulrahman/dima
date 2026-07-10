@@ -54,7 +54,9 @@ function addToCart() {
                 <h1 class="mt-4 text-3xl font-bold text-gray-900">{{ product.name }}</h1>
                 <p class="mt-2 text-sm text-gray-500">Barcode: {{ product.barcode }}</p>
 
-                <p class="mt-6 text-4xl font-bold text-emerald-700">${{ Number(product.price).toFixed(2) }}</p>
+                <p class="mt-6 text-4xl font-bold text-emerald-700">
+                    {{ Number(product.price).toFixed(2) }} EGP
+                </p>
 
                 <div class="mt-8 flex items-center gap-4">
                     <label class="flex items-center gap-2">

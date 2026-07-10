@@ -61,7 +61,9 @@ function statusLabel(status: string): string {
                         <span class="rounded-full px-3 py-1 text-sm font-medium" :class="statusColors[order.status] || 'bg-gray-100 text-gray-800'">
                             {{ statusLabel(order.status) }}
                         </span>
-                        <p class="mt-1 font-bold text-emerald-700">${{ Number(order.total).toFixed(2) }}</p>
+                        <p class="mt-1 font-bold text-emerald-700">
+                            {{ Number(order.total).toFixed(2) }} EGP
+                        </p>
                         <p class="text-sm text-gray-500">{{ order.items_count }} items</p>
                     </div>
                 </div>
