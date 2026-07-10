@@ -70,22 +70,22 @@ function submit() {
                 <h2 class="mb-4 text-xl font-bold text-gray-900">Order Summary</h2>
                 <div class="mb-2 flex justify-between" v-for="item in cart.items" :key="item.id">
                     <span class="text-gray-600">{{ item.product.name }} x{{ item.quantity }}</span>
-                    <span class="font-medium">${{ (item.product.price * item.quantity).toFixed(2) }}</span>
+                    <span class="font-medium">EGP {{ (item.product.price * item.quantity).toFixed(2) }}</span>
                 </div>
                 <div class="mb-4 mt-4 flex justify-between border-t pt-4">
                     <span class="text-gray-600">Subtotal</span>
                     <span class="font-semibold">
-                        ${{ cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toFixed(2) }}
+                        {{ cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toFixed(2) }} EGP
                     </span>
                 </div>
                 <div class="mb-4 flex justify-between">
                     <span class="text-gray-600">Delivery Fee</span>
-                    <span class="font-semibold">$5.00</span>
+                    <span class="font-semibold">5.00 EGP</span>
                 </div>
                 <div class="flex justify-between border-t pt-4">
                     <span class="text-lg font-bold text-gray-900">Total</span>
                     <span class="text-lg font-bold text-emerald-700">
-                        ${{ (cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0) + 5).toFixed(2) }}
+                        {{ (cart.items.reduce((sum, item) => sum + item.product.price * item.quantity, 0) + 5).toFixed(2) }} EGP
                     </span>
                 </div>
             </div>

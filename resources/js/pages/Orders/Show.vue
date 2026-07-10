@@ -39,7 +39,7 @@ function statusLabel(status: string): string {
 </script>
 
 <template>
-    <Head :title="`Order #${order.id}`" />
+    <Head :title="`Order #${order.id} - EGP ${Number(order.total).toFixed(2)}`" />
 
     <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <Link :href="route('orders.index')" class="text-sm font-medium text-emerald-600 hover:text-emerald-700">
@@ -71,8 +71,12 @@ function statusLabel(status: string): string {
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="font-medium">${{ Number(item.price_at_purchase).toFixed(2) }} x{{ item.quantity }}</p>
-                                <p class="text-sm text-gray-500">${{ (item.price_at_purchase * item.quantity).toFixed(2) }}</p>
+                                <p class="font-medium">
+                                    {{ Number(item.price_at_purchase).toFixed(2) }} x{{ item.quantity }} EGP
+                                </p>
+                                <p class="text-sm text-gray-500">
+                                    {{ (item.price_at_purchase * item.quantity).toFixed(2) }} EGP
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -88,15 +92,15 @@ function statusLabel(status: string): string {
                 <div class="space-y-2">
                     <div class="flex justify-between">
                         <span class="text-gray-600">Subtotal</span>
-                        <span class="font-medium">${{ Number(order.subtotal).toFixed(2) }}</span>
+                        <span class="font-medium">{{ Number(order.subtotal).toFixed(2) }} EGP </span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-600">Delivery Fee</span>
-                        <span class="font-medium">${{ Number(order.delivery_fee).toFixed(2) }}</span>
+                        <span class="font-medium">{{ Number(order.delivery_fee).toFixed(2) }} EGP</span>
                     </div>
                     <div class="flex justify-between border-t pt-2">
                         <span class="font-bold text-gray-900">Total</span>
-                        <span class="font-bold text-emerald-700">${{ Number(order.total).toFixed(2) }}</span>
+                        <span class="font-bold text-emerald-700">{{ Number(order.total).toFixed(2) }} EGP</span>
                     </div>
                 </div>
             </div>

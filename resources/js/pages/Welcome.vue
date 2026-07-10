@@ -92,7 +92,7 @@ defineProps<{
                 <div class="flex flex-col items-center gap-3">
                     <span class="text-4xl">🚚</span>
                     <h3 class="text-xl font-semibold">Fast Delivery</h3>
-                    <p class="text-emerald-200">Free delivery on orders over $50. Get it within 2 hours.</p>
+                    <p class="text-emerald-200">Free delivery on orders over EGP 50. Get it within 2 hours.</p>
                 </div>
                 <div class="flex flex-col items-center gap-3">
                     <span class="text-4xl">💚</span>
