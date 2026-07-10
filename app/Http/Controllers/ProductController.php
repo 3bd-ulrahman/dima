@@ -14,7 +14,7 @@ class ProductController extends Controller
 {
     public function index(Request $request): Response
     {
-        $products = Product::with('category')
+        $products = Product::with(['category', 'media'])
             ->when($request->search, fn ($q, $search) => $q->where('name', 'like', "%{$search}%"))
             ->when($request->category, fn ($q, $category) => $q->where('category_id', $category))
             ->when($request->sort === 'price_asc', fn ($q) => $q->orderBy('price'))
@@ -35,9 +35,9 @@ class ProductController extends Controller
 
     public function show(Request $request, Product $product): Response
     {
-        $product->load('category');
+        $product->load(['category', 'media']);
 
-        $related = Product::with('category')
+        $related = Product::with(['category', 'media'])
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('in_stock', true)
