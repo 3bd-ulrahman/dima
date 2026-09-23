@@ -39,22 +39,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
-Route::get('test', function () {
-    $images = [
-        '742278454_1659936365100218_4773972997069753992_n.jpeg',
-        '742324489_2117291749191621_8145197379333982129_n.jpeg',
-        '742558523_911255742001729_8600678665568402185_n.jpeg',
-        '742581232_1687924219105419_450630892925040702_n.jpeg',
-        '742943120_1762146584959979_3882500268190171693_n.jpeg',
-    ];
-
-    $products = Product::inRandomOrder()->limit(5)->get();
-
-    foreach ($products as $index => $product) {
-        $product->addMedia(public_path($images[$index]))
-            ->toMediaCollection('images');
-    }
-
-    return 'Done! Attached 5 images to random products.';
-});

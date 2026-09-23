@@ -17,7 +17,7 @@ defineProps<{
             <Link
                 v-for="category in categories"
                 :key="category.id"
-                :href="route('categories.show', category.slug)"
+                :href="route('categories.show', category.id)"
                 class="flex flex-col items-center gap-4 rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm transition hover:shadow-md"
             >
                 <span class="text-5xl">📦</span>
