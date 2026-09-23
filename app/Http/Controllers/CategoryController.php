@@ -25,7 +25,7 @@ class CategoryController extends Controller
     public function show(Request $request, Category $category): Response
     {
         $products = $category->products()
-            ->with('media')
+            ->with(['media', 'category'])
             ->where('in_stock', true)
             ->orderBy('name')
             ->paginate(12)
