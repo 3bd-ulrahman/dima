@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 import ProductCard from '@/Components/ProductCard.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
 
 defineProps<{
     category: { id: number; name: string; slug: string; products_count: number };
@@ -24,6 +25,7 @@ defineProps<{
 </script>
 
 <template>
+  <AppLayout>
     <Head :title="category.name" />
 
     <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -56,4 +58,5 @@ defineProps<{
             </Link>
         </div>
     </div>
+  </AppLayout>
 </template>

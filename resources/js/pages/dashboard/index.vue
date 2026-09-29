@@ -9,8 +9,6 @@ import DataTable from '@/components/DataTable.vue'
 import SectionCards from '@/components/SectionCards.vue'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 
-defineOptions({ layout: DashboardLayout })
-
 const data = [
   {
     id: 1,
@@ -286,11 +284,13 @@ const data = [
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
-    <SectionCards />
-    <div class="px-4 lg:px-6">
-      <ChartAreaInteractive />
+  <DashboardLayout>
+    <div class="flex flex-col gap-4">
+      <SectionCards />
+      <div class="px-4 lg:px-6">
+        <ChartAreaInteractive />
+      </div>
+      <DataTable :data="data" />
     </div>
-    <DataTable :data="data" />
-  </div>
+  </DashboardLayout>
 </template>
