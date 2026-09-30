@@ -96,6 +96,54 @@ test('index sorts categories by name in both directions', function (): void {
         );
 });
 
+test('index rejects an unknown sort', function (): void {
+    get(route('dashboard.categories.index', ['sort' => 'drop_table']))
+        ->assertSessionHasErrors('sort');
+});
+
+test('index rejects a non-string sort', function (): void {
+    get(route('dashboard.categories.index', ['sort' => ['name_asc']]))
+        ->assertSessionHasErrors('sort');
+});
+
+test('index accepts every supported sort', function (): void {
+    foreach (['name_asc', 'name_desc', 'newest', 'oldest'] as $sort) {
+        get(route('dashboard.categories.index', ['sort' => $sort]))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('filters.sort', $sort)
+            );
+    }
+});
+
+test('index defaults to name ascending when no sort is given', function (): void {
+    Category::factory()->create(['name' => 'Bananas']);
+    Category::factory()->create(['name' => 'Apples']);
+
+    get(route('dashboard.categories.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('filters.sort', '')
+            ->where('categories.data.0.name', 'Apples')
+            ->where('categories.data.1.name', 'Bananas')
+        );
+});
+
+test('index rejects a search term longer than the name column', function (): void {
+    get(route('dashboard.categories.index', ['search' => str_repeat('a', 256)]))
+        ->assertSessionHasErrors('search');
+});
+
+test('index accepts a search term at the column limit', function (): void {
+    get(route('dashboard.categories.index', ['search' => str_repeat('a', 255)]))
+        ->assertOk();
+});
+
+test('index rejects a non-string search', function (): void {
+    get(route('dashboard.categories.index', ['search' => ['fresh']]))
+        ->assertSessionHasErrors('search');
+});
+
 test('index includes the product count for each category', function (): void {
     $category = Category::factory()->create();
     Product::factory(3)->recycle($category)->create();
