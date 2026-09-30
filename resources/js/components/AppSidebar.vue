@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { usePage } from '@inertiajs/vue3';
 import {
     Camera,
     ChartNoAxesColumn,
@@ -13,8 +14,11 @@ import {
     FileChartColumn,
     Search,
     Settings,
+    Tags,
     Users,
 } from '@lucide/vue';
+import { computed } from 'vue';
+import { route } from 'ziggy-js';
 
 import NavDocuments from '@/components/NavDocuments.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -30,7 +34,13 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 
-const data = {
+const page = usePage();
+
+const currentPath = computed(
+    () => page.url.replace(/^https?:\/\/[^/]+/, '').split('?')[0],
+);
+
+const data = computed(() => ({
     user: {
         name: 'shadcn',
         email: 'm@example.com',
@@ -39,8 +49,17 @@ const data = {
     navMain: [
         {
             title: 'Dashboard',
-            url: '#',
+            url: route('dashboard.index'),
             icon: LayoutDashboard,
+            isActive: currentPath.value === route('dashboard.index'),
+        },
+        {
+            title: 'Categories',
+            url: route('dashboard.categories.index'),
+            icon: Tags,
+            isActive: currentPath.value.startsWith(
+                route('dashboard.categories.index'),
+            ),
         },
         {
             title: 'Lifecycle',
@@ -145,7 +164,7 @@ const data = {
             icon: FileText,
         },
     ],
-};
+}));
 </script>
 
 <template>

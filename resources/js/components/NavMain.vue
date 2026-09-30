@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { Component } from 'vue';
+import { Link } from '@inertiajs/vue3';
 import { CirclePlus, Mail } from '@lucide/vue';
+import type { Component } from 'vue';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -13,8 +14,9 @@ import {
 
 interface NavItem {
     title: string;
-    url: string;
+    url?: string;
     icon?: Component;
+    isActive?: boolean;
 }
 
 defineProps<{
@@ -46,7 +48,22 @@ defineProps<{
             </SidebarMenu>
             <SidebarMenu>
                 <SidebarMenuItem v-for="item in items" :key="item.title">
-                    <SidebarMenuButton :tooltip="item.title">
+                    <SidebarMenuButton
+                        v-if="item.url"
+                        as-child
+                        :tooltip="item.title"
+                        :is-active="item.isActive"
+                    >
+                        <Link :href="item.url">
+                            <component :is="item.icon" v-if="item.icon" />
+                            <span>{{ item.title }}</span>
+                        </Link>
+                    </SidebarMenuButton>
+                    <SidebarMenuButton
+                        v-else
+                        :tooltip="item.title"
+                        :is-active="item.isActive"
+                    >
                         <component :is="item.icon" v-if="item.icon" />
                         <span>{{ item.title }}</span>
                     </SidebarMenuButton>
