@@ -5,29 +5,23 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Dashboard\IndexCategoryRequest;
 use App\Models\Category;
 use App\Support\Pagination;
 use Closure;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class CategoryController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(IndexCategoryRequest $request): Response
     {
-        $validated = $request->validate([
-            'search' => ['sometimes', 'string', 'max:50'],
-            'sort' => ['sometimes', 'string', Rule::in(['name_asc', 'name_desc', 'newest', 'oldest'])],
-            'per_page' => Pagination::PER_PAGE_RULES,
-        ]);
-
-        $search = (string) ($validated['search'] ?? '');
-        $sort = (string) ($validated['sort'] ?? '');
-        $perPage = (int) ($validated['per_page'] ?? Pagination::DEFAULT_PER_PAGE);
+        $search = $request->string('search');
+        $sort = $request->string('sort');
+        $perPage = $request->integer('per_page', Pagination::DEFAULT_PER_PAGE);
 
         [$sortColumn, $sortDirection] = $this->resolveSort($sort);
 
@@ -133,11 +127,8 @@ class CategoryController extends Controller
     }
 
     /**
-     * @return array{0: string, 1: string}
-     */
-    /**
      * The default arm only covers an absent sort now; anything else is
-     * rejected by Rule::in before it reaches the query.
+     * rejected by IndexCategoryRequest before it reaches the query.
      *
      * @return array{0: string, 1: string}
      */

@@ -129,14 +129,41 @@ test('index defaults to name ascending when no sort is given', function (): void
         );
 });
 
-test('index rejects a search term longer than the name column', function (): void {
-    get(route('dashboard.categories.index', ['search' => str_repeat('a', 256)]))
+test('index rejects a search term longer than the search limit', function (): void {
+    get(route('dashboard.categories.index', ['search' => str_repeat('a', 51)]))
         ->assertSessionHasErrors('search');
 });
 
-test('index accepts a search term at the column limit', function (): void {
-    get(route('dashboard.categories.index', ['search' => str_repeat('a', 255)]))
+test('index accepts a search term at the search limit', function (): void {
+    get(route('dashboard.categories.index', ['search' => str_repeat('a', 50)]))
         ->assertOk();
+});
+
+test('index accepts a page query parameter', function (): void {
+    Category::factory(20)->create();
+
+    get(route('dashboard.categories.index', ['per_page' => 10, 'page' => 2]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('categories.data', 10)
+            ->where('categories.current_page', 2)
+            ->where('categories.total', 20)
+        );
+});
+
+test('index rejects a non-numeric page', function (): void {
+    get(route('dashboard.categories.index', ['page' => 'abc']))
+        ->assertSessionHasErrors('page');
+});
+
+test('index ignores an unknown query filter', function (): void {
+    Category::factory()->create(['name' => 'Fresh Produce']);
+
+    get(route('dashboard.categories.index', ['bogus' => '1']))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('categories.data', 1)
+        );
 });
 
 test('index rejects a non-string search', function (): void {
