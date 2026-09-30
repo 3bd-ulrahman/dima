@@ -50,7 +50,7 @@ const props = defineProps<{
     filters: CategoryFilters;
 }>();
 
-const PER_PAGE_OPTIONS = [10, 25, 50, 100];
+const PER_PAGE_OPTIONS = [10, 25, 50];
 
 const formSheetOpen = ref(false);
 const deleteDialogOpen = ref(false);

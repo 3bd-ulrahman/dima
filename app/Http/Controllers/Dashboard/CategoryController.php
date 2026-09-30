@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Support\Pagination;
 use Closure;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,18 +16,11 @@ use Inertia\Response;
 
 class CategoryController extends Controller
 {
-    /**
-     * @var array<int, int>
-     */
-    private const PER_PAGE_OPTIONS = [10, 25, 50, 100];
-
-    private const DEFAULT_PER_PAGE = 15;
-
     public function index(Request $request): Response
     {
         $search = $this->stringInput($request, 'search');
         $sort = $this->stringInput($request, 'sort');
-        $perPage = $this->resolvePerPage($request);
+        $perPage = $request->integer('per_page', Pagination::DEFAULT_PER_PAGE);
 
         [$sortColumn, $sortDirection] = $this->resolveSort($sort);
 
@@ -129,13 +123,6 @@ class CategoryController extends Controller
         if ($query->exists()) {
             $fail("Another category already uses the slug \"{$slug}\". Choose a different name.");
         }
-    }
-
-    private function resolvePerPage(Request $request): int
-    {
-        $perPage = (int) $this->stringInput($request, 'per_page');
-
-        return in_array($perPage, self::PER_PAGE_OPTIONS, true) ? $perPage : self::DEFAULT_PER_PAGE;
     }
 
     /**

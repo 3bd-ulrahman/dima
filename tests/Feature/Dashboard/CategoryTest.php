@@ -34,11 +34,34 @@ test('index paginates the categories', function (): void {
         );
 });
 
-test('index falls back to the default per page for unsupported values', function (): void {
-    get(route('dashboard.categories.index', ['per_page' => 9999]))
+test('index uses the shared default per page when none is given', function (): void {
+    get(route('dashboard.categories.index'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
-            ->where('categories.per_page', 15)
+            ->where('categories.per_page', 10)
+        );
+});
+
+test('index rejects a per page above the shared maximum', function (): void {
+    get(route('dashboard.categories.index', ['per_page' => 9999]))
+        ->assertSessionHasErrors('per_page');
+});
+
+test('index rejects a per page below the shared minimum', function (): void {
+    get(route('dashboard.categories.index', ['per_page' => 5]))
+        ->assertSessionHasErrors('per_page');
+});
+
+test('index rejects a non-numeric per page', function (): void {
+    get(route('dashboard.categories.index', ['per_page' => 'abc']))
+        ->assertSessionHasErrors('per_page');
+});
+
+test('index accepts the shared maximum', function (): void {
+    get(route('dashboard.categories.index', ['per_page' => 50]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('categories.per_page', 50)
         );
 });
 
