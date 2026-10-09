@@ -19,24 +19,15 @@ class CategoryController extends Controller
 {
     public function index(IndexCategoryRequest $request): Response
     {
-        $search = $request->string('search');
-        $sort = $request->string('sort');
         $perPage = $request->integer('per_page', Pagination::DEFAULT_PER_PAGE);
 
-        [$sortColumn, $sortDirection] = $this->resolveSort($sort);
-
         $categories = Category::withCount('products')
-            ->when($search !== '', fn ($query) => $query->where('name', 'like', "%{$search}%"))
-            ->orderBy($sortColumn, $sortDirection)
-            ->orderBy('id')
             ->paginate($perPage)
             ->withQueryString();
 
         return Inertia::render('Dashboard/Categories/Index', [
             'categories' => $categories,
             'filters' => [
-                'search' => $search,
-                'sort' => $sort,
                 'per_page' => $perPage,
             ],
         ]);
@@ -124,21 +115,5 @@ class CategoryController extends Controller
         if ($query->exists()) {
             $fail("Another category already uses the slug \"{$slug}\". Choose a different name.");
         }
-    }
-
-    /**
-     * The default arm only covers an absent sort now; anything else is
-     * rejected by IndexCategoryRequest before it reaches the query.
-     *
-     * @return array{0: string, 1: string}
-     */
-    private function resolveSort(string $sort): array
-    {
-        return match ($sort) {
-            'name_desc' => ['name', 'desc'],
-            'newest' => ['created_at', 'desc'],
-            'oldest' => ['created_at', 'asc'],
-            default => ['name', 'asc'],
-        };
     }
 }

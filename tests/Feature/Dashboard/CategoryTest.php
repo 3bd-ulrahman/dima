@@ -65,78 +65,16 @@ test('index accepts the shared maximum', function (): void {
         );
 });
 
-test('index filters categories by search term', function (): void {
-    Category::factory()->create(['name' => 'Fresh Produce']);
-    Category::factory()->create(['name' => 'Dairy']);
-
-    get(route('dashboard.categories.index', ['search' => 'fresh']))
-        ->assertOk()
-        ->assertInertia(fn ($page) => $page
-            ->has('categories.data', 1)
-            ->where('categories.data.0.name', 'Fresh Produce')
-        );
-});
-
-test('index sorts categories by name in both directions', function (): void {
-    Category::factory()->create(['name' => 'Apples']);
-    Category::factory()->create(['name' => 'Bananas']);
-
-    get(route('dashboard.categories.index', ['sort' => 'name_asc']))
-        ->assertOk()
-        ->assertInertia(fn ($page) => $page
-            ->where('categories.data.0.name', 'Apples')
-            ->where('categories.data.1.name', 'Bananas')
-        );
-
-    get(route('dashboard.categories.index', ['sort' => 'name_desc']))
-        ->assertOk()
-        ->assertInertia(fn ($page) => $page
-            ->where('categories.data.0.name', 'Bananas')
-            ->where('categories.data.1.name', 'Apples')
-        );
-});
-
-test('index rejects an unknown sort', function (): void {
-    get(route('dashboard.categories.index', ['sort' => 'drop_table']))
-        ->assertSessionHasErrors('sort');
-});
-
-test('index rejects a non-string sort', function (): void {
-    get(route('dashboard.categories.index', ['sort' => ['name_asc']]))
-        ->assertSessionHasErrors('sort');
-});
-
-test('index accepts every supported sort', function (): void {
-    foreach (['name_asc', 'name_desc', 'newest', 'oldest'] as $sort) {
-        get(route('dashboard.categories.index', ['sort' => $sort]))
-            ->assertOk()
-            ->assertInertia(fn ($page) => $page
-                ->where('filters.sort', $sort)
-            );
-    }
-});
-
-test('index defaults to name ascending when no sort is given', function (): void {
+test('index orders categories by name ascending', function (): void {
     Category::factory()->create(['name' => 'Bananas']);
     Category::factory()->create(['name' => 'Apples']);
 
     get(route('dashboard.categories.index'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
-            ->where('filters.sort', '')
             ->where('categories.data.0.name', 'Apples')
             ->where('categories.data.1.name', 'Bananas')
         );
-});
-
-test('index rejects a search term longer than the search limit', function (): void {
-    get(route('dashboard.categories.index', ['search' => str_repeat('a', 51)]))
-        ->assertSessionHasErrors('search');
-});
-
-test('index accepts a search term at the search limit', function (): void {
-    get(route('dashboard.categories.index', ['search' => str_repeat('a', 50)]))
-        ->assertOk();
 });
 
 test('index accepts a page query parameter', function (): void {
@@ -164,11 +102,6 @@ test('index ignores an unknown query filter', function (): void {
         ->assertInertia(fn ($page) => $page
             ->has('categories.data', 1)
         );
-});
-
-test('index rejects a non-string search', function (): void {
-    get(route('dashboard.categories.index', ['search' => ['fresh']]))
-        ->assertSessionHasErrors('search');
 });
 
 test('index includes the product count for each category', function (): void {

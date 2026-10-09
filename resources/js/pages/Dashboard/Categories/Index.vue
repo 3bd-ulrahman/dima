@@ -5,11 +5,9 @@ import {
     ExternalLink,
     Pencil,
     Plus,
-    Search,
     Trash2,
 } from '@lucide/vue';
-import { watchDebounced } from '@vueuse/core';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { route } from 'ziggy-js';
 
 import CategoryFormSheet from '@/components/CategoryFormSheet.vue';
@@ -23,7 +21,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
     Select,
@@ -55,25 +52,6 @@ const PER_PAGE_OPTIONS = [10, 25, 50];
 const formSheetOpen = ref(false);
 const deleteDialogOpen = ref(false);
 const selectedCategory = ref<Category | null>(null);
-
-const search = ref(props.filters.search);
-
-watchDebounced(
-    search,
-    (value) => {
-        if (value !== props.filters.search) {
-            applyFilters({ search: value });
-        }
-    },
-    { debounce: 400 },
-);
-
-watch(
-    () => props.filters.search,
-    (value) => {
-        search.value = value;
-    },
-);
 
 function applyFilters(changes: Partial<CategoryFilters>): void {
     router.get(
@@ -141,43 +119,6 @@ function openDelete(category: Category): void {
             </div>
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
-                <div class="flex flex-col gap-2 sm:max-w-xs sm:flex-1">
-                    <Label for="category-search">Search</Label>
-                    <div class="relative">
-                        <Search
-                            class="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground"
-                        />
-                        <Input
-                            id="category-search"
-                            v-model="search"
-                            placeholder="Search by name..."
-                            class="pl-8"
-                        />
-                    </div>
-                </div>
-
-                <div class="flex flex-col gap-2">
-                    <Label for="category-sort">Sort</Label>
-                    <Select
-                        :model-value="props.filters.sort"
-                        @update:model-value="
-                            (value) => applyFilters({ sort: String(value) })
-                        "
-                    >
-                        <SelectTrigger id="category-sort" class="w-44">
-                            <SelectValue placeholder="Sort by" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="name_asc">Name (A–Z)</SelectItem>
-                            <SelectItem value="name_desc">
-                                Name (Z–A)
-                            </SelectItem>
-                            <SelectItem value="newest">Newest first</SelectItem>
-                            <SelectItem value="oldest">Oldest first</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-
                 <div class="flex flex-col gap-2">
                     <Label for="category-per-page">Per page</Label>
                     <Select
@@ -293,14 +234,9 @@ function openDelete(category: Category): void {
                             <div class="flex flex-col items-center gap-2">
                                 <p class="font-medium">No categories found</p>
                                 <p class="text-sm text-muted-foreground">
-                                    {{
-                                        props.filters.search
-                                            ? 'Try a different search term.'
-                                            : 'Create your first category to get started.'
-                                    }}
+                                    Create your first category to get started.
                                 </p>
                                 <Button
-                                    v-if="!props.filters.search"
                                     size="sm"
                                     class="mt-2"
                                     @click="openCreate"

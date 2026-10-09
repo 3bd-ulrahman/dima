@@ -7,7 +7,6 @@ namespace App\Http\Requests\Dashboard;
 use App\Support\Pagination;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class IndexCategoryRequest extends FormRequest
 {
@@ -30,8 +29,6 @@ class IndexCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'search' => ['sometimes', 'string', 'max:50'],
-            'sort' => ['sometimes', 'string', Rule::in(['name_asc', 'name_desc', 'newest', 'oldest'])],
             'per_page' => Pagination::PER_PAGE_RULES,
             'page' => ['sometimes', 'integer', 'min:1'],
         ];

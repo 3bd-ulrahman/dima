@@ -12,7 +12,5 @@ export type CategoryPayload = {
 };
 
 export type CategoryFilters = {
-    search: string;
-    sort: string;
     per_page: number;
 };
