@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Sluggable\Attributes\Sluggable;
 
+#[Sluggable(from: 'name', to: 'slug')]
 #[UseFactory(CategoryFactory::class)]
 class Category extends Model
 {

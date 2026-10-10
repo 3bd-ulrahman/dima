@@ -39,7 +39,6 @@ class CategoryController extends Controller
 
         Category::create([
             'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']),
         ]);
 
         return back()->with('success', "{$validated['name']} was created.");
