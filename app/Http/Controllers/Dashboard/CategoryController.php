@@ -35,7 +35,14 @@ class CategoryController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate($this->rules());
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:categories,name',
+            ],
+        ]);
 
         Category::create([
             'name' => $validated['name'],
@@ -46,7 +53,14 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category): RedirectResponse
     {
-        $validated = $request->validate($this->rules($category));
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:categories,name,' . $category->id,
+            ],
+        ]);
 
         $category->update([
             'name' => $validated['name'],
@@ -71,48 +85,5 @@ class CategoryController extends Controller
         $category->delete();
 
         return back()->with('success', "{$name} was deleted.");
-    }
-
-    /**
-     * The slug is never accepted from the request, so it is derived from the
-     * name and checked here instead. Validating the derived value is what
-     * keeps "Fresh Produce" and "Fresh-Produce" from both resolving to
-     * "fresh-produce" and tripping the database index.
-     *
-     * @return array<string, array<int, mixed>>
-     */
-    private function rules(?Category $category = null): array
-    {
-        return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                function (string $attribute, mixed $value, Closure $fail) use ($category): void {
-                    $this->ensureSlugIsAvailable($value, $category, $fail);
-                },
-            ],
-        ];
-    }
-
-    private function ensureSlugIsAvailable(mixed $name, ?Category $category, Closure $fail): void
-    {
-        $slug = Str::slug(is_string($name) ? $name : '');
-
-        if ($slug === '') {
-            $fail('The name must contain at least one letter or number.');
-
-            return;
-        }
-
-        $query = Category::query()->where('slug', $slug);
-
-        if ($category instanceof Category) {
-            $query->whereKeyNot($category->getKey());
-        }
-
-        if ($query->exists()) {
-            $fail("Another category already uses the slug \"{$slug}\". Choose a different name.");
-        }
     }
 }
